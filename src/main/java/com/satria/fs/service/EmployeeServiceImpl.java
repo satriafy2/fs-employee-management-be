@@ -67,11 +67,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
 
-            Employee isExist = mapper.selectEmployee(id, null);
-            if (isExist == null) {
+            Employee existingEmployee = mapper.selectEmployee(id, null);
+            if (existingEmployee == null) {
                 session.close();
                 return "Employee not found.";
             }
+
+            existingEmployee = mapper.selectEmployee(null, employeeRequest.getEmployeeNumber());
+            if (existingEmployee != null)
+                if (existingEmployee.getId() != id) {
+                    session.close();
+                    return "Employee number already registered.";
+                }
 
             int rowsAffected = mapper.updateEmployee(
                 id,
