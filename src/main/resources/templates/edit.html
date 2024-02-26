@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="#" 
+    th:action="@{/employee/edit/{id}/submit(id=${employee.id})}" 
+    th:object="${employee}"
+    method="POST">
+
+        <table>
+            <tr>
+                <td>Employee Number</td>
+                <td>
+                    <input type="text" th:field="*{employeeNumber}" id="employeeNumber" placeholder="Employee Number">
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input type="text" th:field="*{name}" id="name" placeholder="Name">
+                </td>
+            </tr>
+            <tr>
+                <td>Position</td>
+                <td>
+                    <input type="text" th:field="*{position}" id="position" placeholder="Position">
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <input type="text" th:field="*{emailAddress}" id="emailAddress" placeholder="Email Address">
+                </td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td>
+                    <input type="text" th:field="*{phoneNumber}" id="phoneNumber" placeholder="Phone Number">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="Update employee">
+                </td>
+            </tr>
+        </table>
+           
+    </form>
+</body>
+</html>

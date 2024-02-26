@@ -48,4 +48,18 @@ public class EmployeeRequestDto {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    public EmployeeRequestDto(
+        Integer employeeNumber,
+        String name,
+        String position,
+        String phoneNumber,
+        String emailAddress
+    ) {
+        this.employeeNumber = employeeNumber;
+        this.name = name;
+        this.position = position;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+    }
 }

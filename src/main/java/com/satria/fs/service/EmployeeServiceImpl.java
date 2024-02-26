@@ -12,7 +12,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.stereotype.Service;
 
 import com.satria.fs.data.EmployeeMapper;
-import com.satria.fs.dto.GetEmployeesResponseDto;
 import com.satria.fs.dto.EmployeeRequestDto;
 import com.satria.fs.model.Employee;
 
@@ -109,6 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
             mapper.deleteEmployee(id);
+            session.commit();
             session.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -116,7 +116,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public GetEmployeesResponseDto getEmployees(HttpServletRequest httpRequest) throws IOException {
+    public List<Employee> getEmployees(HttpServletRequest httpRequest) throws IOException {
         InputStream inputStream = Resources.getResourceAsStream(DB_CONFIG_XML);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         List<Employee> employees = new ArrayList<>();
@@ -142,9 +142,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 httpRequest.getParameter("email")
             );
 
-            if (totalRows == 0) return new GetEmployeesResponseDto(
-                totalRows, 1, totalPage, employees
-            );
+            if (totalRows == 0) return employees;
 
             totalPage = (totalRows / limit) + 1;
             employees = mapper.selectEmployees(
@@ -164,12 +162,23 @@ public class EmployeeServiceImpl implements EmployeeService {
             System.out.println(e);
         }
 
-        return new GetEmployeesResponseDto(
-            totalRows,
-            currentPage,
-            totalPage,
-            employees
-        );
+        return employees;
+    }
+
+    @Override
+    public Employee getEmployee(Long id) throws IOException {
+        InputStream inputStream = Resources.getResourceAsStream(DB_CONFIG_XML);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        Employee employee = null;
+
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+            employee = mapper.selectEmployee(id, null);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return employee;
     }
 
 }
